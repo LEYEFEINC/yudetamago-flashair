@@ -1,6 +1,7 @@
 dofile("bootscript_config.lua")
 
-NIFTY_RETRY_TIMES = 3
+NIFTY_RETRY_TIMES       = 5
+NIFTY_RETRY_INTERVAL_MS = 30000
 
 function led_impl(led, ms)
   fa.pio(0x03, led)
@@ -62,6 +63,7 @@ function set_existance(existance)
   for i=1,NIFTY_RETRY_TIMES do
     local c = set_existance_impl(existance)
     if c == 200 then return end
+    sleep(NIFTY_RETRY_INTERVAL_MS)
   end
   show_error()
 end
@@ -87,6 +89,7 @@ function get_existance()
     if     existing == "1" then return true
     elseif existing == "0" then return false
     end
+    sleep(NIFTY_RETRY_INTERVAL_MS)
   end
   show_error()
 end
@@ -111,6 +114,7 @@ function push_notification(title, message)
   for i=1,NIFTY_RETRY_TIMES do
     local c = push_notification_impl(title, message)
     if c == 201 then return end
+    sleep(NIFTY_RETRY_INTERVAL_MS)
   end
   show_error()
 end
